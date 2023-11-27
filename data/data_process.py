@@ -1,5 +1,5 @@
-# import os
-# import regex
+import os
+import regex
 
 raw = '/home/huy/nlp/NMT-LaVi/data/raw/'
 file_list_lo = ['dev2023.lo',
@@ -11,46 +11,46 @@ dup = '/home/huy/nlp/NMT-LaVi/data/dup/'
 pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
 print('File list: ', file_list)
 
-# # add '.' to end of all lines
-# for file in file_list:
-#     with open(raw + file,'r') as f, open(pre_processed + 'adddot_' + file,'w+') as f2:
+# add '.' to end of all lines
+for file in file_list:
+    with open(raw + file,'r') as f, open(pre_processed + 'adddot_' + file,'w+') as f2:
+        lines = f.readlines()
+        for line in lines:
+            if line[-2] != '.':
+                line = line[:-1] + '.\n'
+            f2.write(line)
+print('Add dot done!')
+
+# remove duplicate lines
+file_name = ['dev2023',     
+             'train2023']
+for file in file_name:
+    file_lo = pre_processed + 'adddot_' + file + '.lo'
+    file_vi = pre_processed + 'adddot_' + file + '.vi'
+    with open(file_lo,'r') as flo, open(file_vi,'r') as fvi, open(pre_processed + 'nodup_' + file + '.lo','w+') as flo2, open(pre_processed + 'nodup_' + file + '.vi','w+') as fvi2:
+        lines_lo = flo.readlines()
+        lines_vi = fvi.readlines()
+        n = min(len(lines_lo),len(lines_vi))
+        line_set_lo = set()
+        line_set_vi = set()
+        for i in range(0,n):
+            if((lines_lo[i] not in line_set_lo) and (lines_vi[i] not in line_set_vi)):
+                line_set_lo.add(lines_lo[i])
+                line_set_vi.add(lines_vi[i])
+                flo2.write(lines_lo[i])
+                fvi2.write(lines_vi[i])
+print('Remove duplicate done!')
+
+# # remove numbers and latin characters
+# for file in file_list_lo:
+#     with open(pre_processed + 'nodup_' + file,'r') as f, open(pre_processed + file,'w+') as f2:
 #         lines = f.readlines()
 #         for line in lines:
-#             if line[-2] != '.':
-#                 line = line[:-1] + '.\n'
+#             line = regex.sub(r"(\s*[A-Za-z0-9])+",'',line)
 #             f2.write(line)
-# print('Add dot done!')
+# print('Remove numbers and latin characters done!')
 
-# # remove duplicate lines
-# file_name = ['dev2023',     
-#              'train2023']
-# for file in file_name:
-#     file_lo = pre_processed + 'adddot_' + file + '.lo'
-#     file_vi = pre_processed + 'adddot_' + file + '.vi'
-#     with open(file_lo,'r') as flo, open(file_vi,'r') as fvi, open(pre_processed + 'nodup_' + file + '.lo','w+') as flo2, open(pre_processed + 'nodup_' + file + '.vi','w+') as fvi2:
-#         lines_lo = flo.readlines()
-#         lines_vi = fvi.readlines()
-#         n = min(len(lines_lo),len(lines_vi))
-#         line_set_lo = set()
-#         line_set_vi = set()
-#         for i in range(0,n):
-#             if((lines_lo[i] not in line_set_lo) and (lines_vi[i] not in line_set_vi)):
-#                 line_set_lo.add(lines_lo[i])
-#                 line_set_vi.add(lines_vi[i])
-#                 flo2.write(lines_lo[i])
-#                 fvi2.write(lines_vi[i])
-# print('Remove duplicate done!')
-
-# # # remove numbers and latin characters
-# # for file in file_list_lo:
-# #     with open(pre_processed + 'nodup_' + file,'r') as f, open(pre_processed + file,'w+') as f2:
-# #         lines = f.readlines()
-# #         for line in lines:
-# #             line = regex.sub(r"(\s*[A-Za-z0-9])+",'',line)
-# #             f2.write(line)
-# # print('Remove numbers and latin characters done!')
-
-# # remove line with emoji, links, html tags
+# remove line with emoji, links, html tags
 # file_name = ['dev2023',     
 #              'train2023']
 # for file in file_name:
@@ -69,9 +69,26 @@ print('File list: ', file_list)
                 
 #                 flo2.write(lines_lo[i])
 #                 fvi2.write(lines_vi[i])
-# print('Remove emoji, html, links done!')
 
-# create 1000 liné version
+# remove emoji, html, links
+emoji = r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'
+html  = r'<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|\'.*?\'|[\^\'\">\s]+))?)+\s*|\as*)\/?>'
+link = r'([(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=-]{2,256}\.[a-z]{2,6}|(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\b([-a-zA-Z0-9@:%_\+~#?&//=]*)'
+
+for file in file_list:
+    with open(pre_processed + 'nodup_' + file,'r') as f, open(pre_processed + file,'w+') as f2:
+        lines = f.readlines()
+        for line in lines:
+            # no emoji
+            line = regex.sub(emoji,'',line)
+            # no html tags
+            line = regex.sub(html,'',line)
+            # no links
+            line = regex.sub(link,'',line)
+            f2.write(line)
+print('Remove emoji, html, links done!')
+
+# create 1000 lines version
 file_lo = pre_processed + 'train2023.lo'
 file_vi = pre_processed + 'train2023.vi'
 
