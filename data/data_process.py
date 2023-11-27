@@ -6,28 +6,24 @@ file_list_lo = ['dev2023.lo',
                 'train2023.lo']
 file_list_vi = ['dev2023.vi',
                 'train2023.vi']
+file_name = ['dev2023',     
+             'train2023']
 file_list = file_list_lo + file_list_vi
-dup = '/home/huy/nlp/NMT-LaVi/data/dup/'
 pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
 print('File list: ', file_list)
 
 # add '.' to end of all lines
-for file in file_list:
-    with open(raw + file,'r') as f, open(pre_processed + 'adddot_' + file,'w+') as f2:
+def add_dot(file, out):
+    with open(file,'r') as f, open(out,'w+') as f2:
         lines = f.readlines()
         for line in lines:
             if line[-2] != '.':
                 line = line[:-1] + '.\n'
             f2.write(line)
-print('Add dot done!')
 
-# remove duplicate lines
-file_name = ['dev2023',     
-             'train2023']
-for file in file_name:
-    file_lo = pre_processed + 'adddot_' + file + '.lo'
-    file_vi = pre_processed + 'adddot_' + file + '.vi'
-    with open(file_lo,'r') as flo, open(file_vi,'r') as fvi, open(pre_processed + 'nodup_' + file + '.lo','w+') as flo2, open(pre_processed + 'nodup_' + file + '.vi','w+') as fvi2:
+# remove duplicate lines (in both la vi)
+def no_more_dup(file, out):
+    with open(file + '.lo','r') as flo, open(file + '.vi','r') as fvi, open(out + '.lo','w+') as flo2, open(out + '.vi','w+') as fvi2:
         lines_lo = flo.readlines()
         lines_vi = fvi.readlines()
         n = min(len(lines_lo),len(lines_vi))
@@ -39,44 +35,13 @@ for file in file_name:
                 line_set_vi.add(lines_vi[i])
                 flo2.write(lines_lo[i])
                 fvi2.write(lines_vi[i])
-print('Remove duplicate done!')
-
-# # remove numbers and latin characters
-# for file in file_list_lo:
-#     with open(pre_processed + 'nodup_' + file,'r') as f, open(pre_processed + file,'w+') as f2:
-#         lines = f.readlines()
-#         for line in lines:
-#             line = regex.sub(r"(\s*[A-Za-z0-9])+",'',line)
-#             f2.write(line)
-# print('Remove numbers and latin characters done!')
-
-# remove line with emoji, links, html tags
-# file_name = ['dev2023',     
-#              'train2023']
-# for file in file_name:
-#     file_lo = pre_processed + 'nodup_' + file + '.lo'
-#     file_vi = pre_processed + 'nodup_' + file + '.vi'
-#     # file_lo_out = pre_processed + 'notrash_' + file + '.lo'
-#     # file_vi_out = pre_processed + 'notrash_' + file + '.vi'
-#     file_lo_out = pre_processed + file + '.lo'
-#     file_vi_out = pre_processed + file + '.vi'
-#     with open(file_lo,'r') as flo, open(file_vi,'r') as fvi, open(file_lo_out,'w+') as flo2, open(file_vi_out,'w+') as fvi2:
-#         lines_lo = flo.readlines()
-#         lines_vi = fvi.readlines()
-#         n = min(len(lines_lo),len(lines_vi))
-#         for i in range(0,n):
-#             # no emoji 
-                
-#                 flo2.write(lines_lo[i])
-#                 fvi2.write(lines_vi[i])
 
 # remove emoji, html, links
 emoji = r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'
 html  = r'<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|\'.*?\'|[\^\'\">\s]+))?)+\s*|\as*)\/?>'
 link = r'([(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=-]{2,256}\.[a-z]{2,6}|(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\b([-a-zA-Z0-9@:%_\+~#?&//=]*)'
-
-for file in file_list:
-    with open(pre_processed + 'nodup_' + file,'r') as f, open(pre_processed + file,'w+') as f2:
+def no_more_trash(file, out):
+    with open(file,'r') as f, open(out,'w+') as f2:
         lines = f.readlines()
         for line in lines:
             # no emoji
@@ -86,16 +51,34 @@ for file in file_list:
             # no links
             line = regex.sub(link,'',line)
             f2.write(line)
-print('Remove emoji, html, links done!')
 
-# create 1000 lines version
-file_lo = pre_processed + 'train2023.lo'
-file_vi = pre_processed + 'train2023.vi'
+# create x lines version of train2023
+def create_x_lines(x):
+    file_lo = pre_processed + 'train2023.lo'
+    file_vi = pre_processed + 'train2023.vi'
 
-with open(file_lo,'r') as flo, open(file_vi,'r') as fvi, open(pre_processed + 'train1000.lo','w+') as flo2, open(pre_processed + 'train1000.vi','w+') as fvi2:
-    lines_lo = flo.readlines()
-    lines_vi = fvi.readlines()
-    n = min(len(lines_lo),len(lines_vi))
-    for i in range(0,1000):
-        flo2.write(lines_lo[i])
-        fvi2.write(lines_vi[i])
+    with open(file_lo,'r') as flo, open(file_vi,'r') as fvi, open(pre_processed + f'train{x}.lo','w+') as flo2, open(pre_processed + f'train{x}.vi','w+') as fvi2:
+        lines_lo = flo.readlines()
+        lines_vi = fvi.readlines()
+        n = min(len(lines_lo),len(lines_vi))
+        for i in range(0,x):
+            flo2.write(lines_lo[i])
+            fvi2.write(lines_vi[i])
+    print(f'Create {x} lines version done!')
+
+
+for file in file_list:
+    add_dot(raw + file, pre_processed + 'adddot_' + file)
+print('Add dot done!')
+
+for file in file_name:
+    no_more_dup(pre_processed + 'adddot_' + file, pre_processed + 'nodup_' + file)
+print('Remove duplicate done!')
+
+for file in file_list:
+    no_more_trash(pre_processed + 'nodup_' + file, pre_processed + file)
+print('Remove trash done!')
+
+create_x_lines(1000)
+create_x_lines(10000)
+create_x_lines(50000)
