@@ -1,0 +1,73 @@
+[Sat, 25 Nov 2023 11:51:55 INFO] .lo * src vocab size = 1190
+[Sat, 25 Nov 2023 11:51:55 INFO] .vi * tgt vocab size = 1379
+[Sat, 25 Nov 2023 11:51:55 INFO] Building model...
+[Sat, 25 Nov 2023 11:51:55 INFO] Transformer(
+  (encoder): Encoder(
+    (embed): Embedding(1190, 512)
+    (pe): PositionalEncoder(
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (layers): ModuleList(
+      (0-5): 6 x EncoderLayer(
+        (norm_1): Norm()
+        (norm_2): Norm()
+        (attn): MultiHeadAttention(
+          (q_linear): Linear(in_features=512, out_features=512, bias=True)
+          (k_linear): Linear(in_features=512, out_features=512, bias=True)
+          (v_linear): Linear(in_features=512, out_features=512, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (out): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (ff): FeedForward(
+          (linear_1): Linear(in_features=512, out_features=2048, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (linear_2): Linear(in_features=2048, out_features=512, bias=True)
+        )
+        (dropout_1): Dropout(p=0.1, inplace=False)
+        (dropout_2): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): Norm()
+  )
+  (decoder): Decoder(
+    (embed): Embedding(1379, 512)
+    (pe): PositionalEncoder(
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (layers): ModuleList(
+      (0-5): 6 x DecoderLayer(
+        (norm_1): Norm()
+        (norm_2): Norm()
+        (norm_3): Norm()
+        (dropout_1): Dropout(p=0.1, inplace=False)
+        (dropout_2): Dropout(p=0.1, inplace=False)
+        (dropout_3): Dropout(p=0.1, inplace=False)
+        (attn_1): MultiHeadAttention(
+          (q_linear): Linear(in_features=512, out_features=512, bias=True)
+          (k_linear): Linear(in_features=512, out_features=512, bias=True)
+          (v_linear): Linear(in_features=512, out_features=512, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (out): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (attn_2): MultiHeadAttention(
+          (q_linear): Linear(in_features=512, out_features=512, bias=True)
+          (k_linear): Linear(in_features=512, out_features=512, bias=True)
+          (v_linear): Linear(in_features=512, out_features=512, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (out): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (ff): FeedForward(
+          (linear_1): Linear(in_features=512, out_features=2048, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (linear_2): Linear(in_features=2048, out_features=512, bias=True)
+        )
+      )
+    )
+    (norm): Norm()
+  )
+  (out): Linear(in_features=512, out_features=1379, bias=True)
+)
+[Sat, 25 Nov 2023 11:51:55 INFO] Encoder: 19524608
+[Sat, 25 Nov 2023 11:51:55 INFO] Decoder: 25931264
+[Sat, 25 Nov 2023 11:51:55 INFO] * Number of parameters: 45455872
+[Sat, 25 Nov 2023 11:51:55 INFO] Starting training on cuda

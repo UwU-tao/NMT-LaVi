@@ -10,7 +10,7 @@ file_list = file_list_lo + file_list_vi
 dup = '/home/huy/nlp/NMT-LaVi/data/dup/'
 pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
 
-
+cnt = 1
 for file in file_list:
     with open(pre_processed + file,'r') as f:
         print(file)
@@ -21,6 +21,8 @@ for file in file_list:
                 line_len[len(line)] = 1
             line_len[len(line)] += 1
         
-        
+        plt.subplot(2,2,cnt)
+        cnt+=1
         plt.hist(line_len,10)
-        plt.show()
+
+plt.show()
