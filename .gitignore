@@ -4,4 +4,5 @@ models/__pycache__
 modules/__pycache__
 utils/__pycache__
 data/raw/preprocess.ipynb
-/models/__pycache__
+models/__pycache__
+*/__pycache__
