@@ -42,7 +42,7 @@ optimizer_params:
   eps: !!float 1e-9
 n_warmup_steps: 4000
 label_smoothing: 0.1
-dropout: 0.1
+dropout: 0.05
 # training config, evaluation, save & load section
 batch_size: 32
 epochs: 30
