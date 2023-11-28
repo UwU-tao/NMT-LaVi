@@ -1,3 +1,4 @@
 - Thêm dấu chấm vào tất cả các câu không có 
 - Nếu lặp trong file Lào/Việt -> xóa cả ở cả 2
 - Xóa emoji/html/link 
+- Nếu file tiếng lào có câu chứa tiếng Việt -> xóa ở cả 2

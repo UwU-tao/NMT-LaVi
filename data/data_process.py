@@ -1,16 +1,5 @@
 import os
-import regex
-
-raw = '/home/huy/nlp/NMT-LaVi/data/raw/'
-file_list_lo = ['dev2023.lo',
-                'train2023.lo']
-file_list_vi = ['dev2023.vi',
-                'train2023.vi']
-file_name = ['dev2023',     
-             'train2023']
-file_list = file_list_lo + file_list_vi
-pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
-print('File list: ', file_list)
+import re
 
 # add '.' to end of all lines
 def add_dot(file, out):
@@ -45,12 +34,25 @@ def no_more_trash(file, out):
         lines = f.readlines()
         for line in lines:
             # no emoji
-            line = regex.sub(emoji,'',line)
+            line = re.sub(emoji,'',line)
             # no html tags
-            line = regex.sub(html,'',line)
+            line = re.sub(html,'',line)
             # no links
-            line = regex.sub(link,'',line)
+            line = re.sub(link,'',line)
             f2.write(line)
+
+
+# delete any case that Vi occure in La
+vietnamese = r'[áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ]'
+def no_more_vi_in_lo(file, out):
+    with open(file + '.lo','r') as flo, open(file + '.vi','r') as fvi, open(out + '.lo','w+') as flo2, open(out + '.vi','w+') as fvi2:
+        lines_lo = flo.readlines()
+        lines_vi = fvi.readlines()
+        n = min(len(lines_lo),len(lines_vi))
+        for i in range(0,n):
+            if(re.search(vietnamese,lines_lo[i],re.IGNORECASE) == None):
+                flo2.write(lines_lo[i])
+                fvi2.write(lines_vi[i])
 
 # create x lines version of train2023
 def create_x_lines(x):
@@ -67,6 +69,18 @@ def create_x_lines(x):
     print(f'Create {x} lines version done!')
 
 
+
+raw = '/home/huy/nlp/NMT-LaVi/data/raw/'
+file_list_lo = ['dev2023.lo',
+                'train2023.lo']
+file_list_vi = ['dev2023.vi',
+                'train2023.vi']
+file_name = ['dev2023',     
+             'train2023']
+file_list = file_list_lo + file_list_vi
+pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
+print('File list: ', file_list)
+
 for file in file_list:
     add_dot(raw + file, pre_processed + 'adddot_' + file)
 print('Add dot done!')
@@ -76,8 +90,19 @@ for file in file_name:
 print('Remove duplicate done!')
 
 for file in file_list:
-    no_more_trash(pre_processed + 'nodup_' + file, pre_processed + file)
+    no_more_trash(pre_processed + 'nodup_' + file, pre_processed + 'notrash_' + file)
 print('Remove trash done!')
+
+for file in file_name:
+    # no_more_vi_in_lo(pre_processed + 'notrash_' + file, pre_processed + 'no_vi_in_lo_' + file)
+    no_more_vi_in_lo(pre_processed + 'notrash_' + file, pre_processed + file)
+print('Remove Vi in La done!')
+
+#delete all files except train2023 and dev2023
+for file in os.listdir(pre_processed):
+    if file not in file_list:
+        os.remove(pre_processed + file)
+print('File clean up done!')
 
 create_x_lines(1000)
 create_x_lines(10000)
