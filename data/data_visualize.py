@@ -10,6 +10,8 @@ file_list = file_list_lo + file_list_vi
 dup = '/home/huy/nlp/NMT-LaVi/data/dup/'
 pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
 
+
+file_list = ['train1000.lo','train1000.vi']
 cnt = 1
 for file in file_list:
     with open(pre_processed + file,'r') as f:

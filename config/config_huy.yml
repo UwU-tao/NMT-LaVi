@@ -1,6 +1,6 @@
 # data location and config section
 data:
-  train_data_location: data/pre_processed/train2023
+  train_data_location: data/pre_processed/train1000
   eval_data_location:  data/pre_processed/dev2023
   src_lang: .lo 
   trg_lang: .vi 
