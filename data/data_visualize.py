@@ -11,7 +11,7 @@ dup = '/home/huy/nlp/NMT-LaVi/data/dup/'
 pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
 
 
-file_list = ['train1000.lo','train1000.vi']
+# file_list = ['train2023.lo','train2023.vi']
 cnt = 1
 for file in file_list:
     with open(pre_processed + file,'r') as f:
@@ -25,6 +25,9 @@ for file in file_list:
         
         plt.subplot(2,2,cnt)
         cnt+=1
-        plt.hist(line_len,10)
+        keys = line_len.keys()
+        values = line_len.values()
+        plt.bar(keys, values)
+        # plt.hist(line_len,100)
 
 plt.show()

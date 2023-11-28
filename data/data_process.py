@@ -68,7 +68,15 @@ def create_x_lines(x):
             fvi2.write(lines_vi[i])
     print(f'Create {x} lines version done!')
 
-
+def trim(size, file, out):
+    with open(file + '.lo','r') as flo, open(file + '.vi','r') as fvi, open(out + '.lo','w+') as flo2, open(out + '.vi','w+') as fvi2:
+        lines_lo = flo.readlines()
+        lines_vi = fvi.readlines()
+        n = min(len(lines_lo),len(lines_vi))
+        for i in range(0,n):
+            if(len(lines_lo[i]) <= size and len(lines_vi[i]) <= size):
+                flo2.write(lines_lo[i])
+                fvi2.write(lines_vi[i])
 
 raw = '/home/huy/nlp/NMT-LaVi/data/raw/'
 file_list_lo = ['dev2023.lo',
@@ -94,9 +102,13 @@ for file in file_list:
 print('Remove trash done!')
 
 for file in file_name:
-    # no_more_vi_in_lo(pre_processed + 'notrash_' + file, pre_processed + 'no_vi_in_lo_' + file)
-    no_more_vi_in_lo(pre_processed + 'notrash_' + file, pre_processed + file)
+    no_more_vi_in_lo(pre_processed + 'notrash_' + file, pre_processed + 'no_vi_in_lo_' + file)
+    # no_more_vi_in_lo(pre_processed + 'notrash_' + file, pre_processed + file)
 print('Remove Vi in La done!')
+
+for file in file_name:
+    trim(300, pre_processed + 'no_vi_in_lo_' + file, pre_processed + file)
+print('Triming to max length done!')
 
 #delete all files except train2023 and dev2023
 for file in os.listdir(pre_processed):
