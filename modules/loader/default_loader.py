@@ -9,6 +9,7 @@ from collections import Counter
 import modules.constants as const
 from utils.save import load_vocab_from_path
 import laonlp
+from nltk.tokenize import word_tokenize
 
 class DefaultLoader:
   def __init__(self, train_path_or_name, language_tuple=None, valid_path=None, eval_path=None, option=None):
@@ -24,8 +25,9 @@ class DefaultLoader:
     return None, None
 
   def tokenize(self, sentence):
-    return sentence.strip().split()
-
+    tokens = laonlp.tokenize.word_tokenize(sentence)
+    return [token for token in tokens if token != " "]
+  
   def detokenize(self, list_of_tokens):
     """Differentiate between [batch, len] and [len]; joining tokens back to strings"""
     if( len(list_of_tokens) == 0 or isinstance(list_of_tokens[0], str)):
