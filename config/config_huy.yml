@@ -33,7 +33,7 @@ input_max_length: 300 # input longer than this value will be trimmed in inferenc
 max_length: 160 # only perform up to this much timestep during inference
 train_max_length: 150 # training samples with this much length in src/trg will be discarded
 # optimizer and learning arguments section
-lr: 0.01
+lr: 0.2
 optimizer: AdaBelief
 optimizer_params:
   betas:
