@@ -68,15 +68,16 @@ def create_x_lines(x):
             fvi2.write(lines_vi[i])
     print(f'Create {x} lines version done!')
 
-def trim(size, file, out):
+def trim(length, file, out):
     with open(file + '.lo','r') as flo, open(file + '.vi','r') as fvi, open(out + '.lo','w+') as flo2, open(out + '.vi','w+') as fvi2:
         lines_lo = flo.readlines()
         lines_vi = fvi.readlines()
         n = min(len(lines_lo),len(lines_vi))
         for i in range(0,n):
-            if(len(lines_lo[i]) <= size and len(lines_vi[i]) <= size):
-                flo2.write(lines_lo[i])
-                fvi2.write(lines_vi[i])
+            if(len(lines_lo[i]) > length) or (len(lines_vi[i]) > length):
+                continue
+            flo2.write(lines_lo[i])
+            fvi2.write(lines_vi[i])
 
 def cut_first_n_lines(n, file, outTest, outTrain):
     with open(file,'r') as f, open(outTest,'w+') as ft, open(outTrain,'w+') as ftr:
@@ -115,12 +116,14 @@ for file in file_name:
 print('Remove Vi in La done!')
 
 for file in file_name:
-    trim(300, pre_processed + 'no_vi_in_lo_' + file, pre_processed + 'final_' + file)
+    trim(300, pre_processed + 'no_vi_in_lo_' + file, pre_processed + file)
 print('Triming to max length done!')
 
 # cut first 1500 lines from train to make test file
-cut_first_n_lines(1500, pre_processed + 'final_train2023.lo', pre_processed + 'test.lo', pre_processed + 'train2023.lo')
-cut_first_n_lines(1500, pre_processed + 'final_train2023.vi', pre_processed + 'test.vi', pre_processed + 'train2023.vi')
+os.rename(pre_processed + 'train2023.lo', pre_processed + 'xtrain2023.lo')
+os.rename(pre_processed + 'train2023.vi', pre_processed + 'xtrain2023.vi')  
+cut_first_n_lines(1500, pre_processed + 'xtrain2023.lo', pre_processed + 'test.lo', pre_processed + 'train2023.lo')
+cut_first_n_lines(1500, pre_processed + 'xtrain2023.vi', pre_processed + 'test.vi', pre_processed + 'train2023.vi')
 
 #delete all files except train2023 and dev2023
 file_list.append('test.lo')
