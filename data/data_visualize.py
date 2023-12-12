@@ -9,12 +9,13 @@ file_list_vi = ['dev2023.vi',
 file_list = file_list_lo + file_list_vi
 dup = '/home/huy/nlp/NMT-LaVi/data/dup/'
 pre_processed = '/home/huy/nlp/NMT-LaVi/data/pre_processed/'
-
+prepared = '/home/huy/nlp/NMT-LaVi/data/prepared/'
 
 # file_list = ['train2023.lo','train2023.vi']
 cnt = 1
 for file in file_list:
-    with open(pre_processed + file,'r') as f:
+    # with open(pre_processed + file,'r') as f:
+    with open(prepared + file,'r') as f:
         print(file)
         line_len = dict()
         lines = f.readlines()
