@@ -12,6 +12,7 @@ def add_dot(file, out):
 
 # remove duplicate lines (in both la vi)
 def no_more_dup(file, out):
+    num_dup = 0
     with open(file + '.lo','r') as flo, open(file + '.vi','r') as fvi, open(out + '.lo','w+') as flo2, open(out + '.vi','w+') as fvi2:
         lines_lo = flo.readlines()
         lines_vi = fvi.readlines()
@@ -24,6 +25,9 @@ def no_more_dup(file, out):
                 line_set_vi.add(lines_vi[i])
                 flo2.write(lines_lo[i])
                 fvi2.write(lines_vi[i])
+            else:
+                num_dup += 1
+    return num_dup
 
 # remove emoji, html, links
 emoji = r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'
