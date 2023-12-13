@@ -103,6 +103,18 @@ def trim(length, file, out):
             fvi2.write(lines_vi[i])
     return num_trim
 
+# make punctuation to be separated by space
+def sep_punc(file, out):
+    with open(file,'r') as f, open(out,'w+') as f2:
+        lines = f.readlines()
+        for line in lines:
+            # sepereate punctuation from words
+            line = re.sub(r'([-_:;.,!?()])', r' \1 ', line)
+            # remove multiple spaces
+            line = re.sub(r'[" "]+', " ", line)
+            f2.write(line)
+
+# cut the final file in 2 parts: train and test - for infer
 def cut_first_n_lines(n, file, outTest, outTrain):
     with open(file,'r') as f, open(outTest,'w+') as ft, open(outTrain,'w+') as ftr:
         lines = f.readlines()
@@ -160,11 +172,15 @@ for file in file_name:
     print('Removed vie in ', file, ': ', num)
 print('Remove Vi in La done!')
 
-#TRIM
-for file in file_name:
-    num = trim(300, pre_processed + 'no_vi_in_lo_' + file, pre_processed + file)
-    print('Trimed in ', file, ': ', num)
-print('Triming to max length done!')
+# #SEP PUNC
+for file in file_list:
+    sep_punc(pre_processed + 'no_vi_in_lo_' + file, pre_processed + file)
+
+# #TRIM
+# for file in file_name:
+#     num = trim(300, pre_processed + 'no_vi_in_lo_' + file, pre_processed + file)
+#     print('Trimed in ', file, ': ', num)
+# print('Triming to max length done!')
 
 # cut first 1500 lines from train to make test file
 os.rename(pre_processed + 'train2023.lo', pre_processed + 'xtrain2023.lo')
