@@ -174,13 +174,13 @@ print('Remove Vi in La done!')
 
 # #SEP PUNC
 for file in file_list:
-    sep_punc(pre_processed + 'no_vi_in_lo_' + file, pre_processed + file)
+    sep_punc(pre_processed + 'no_vi_in_lo_' + file, pre_processed + 'sep_' + file)
 
-# #TRIM
-# for file in file_name:
-#     num = trim(300, pre_processed + 'no_vi_in_lo_' + file, pre_processed + file)
-#     print('Trimed in ', file, ': ', num)
-# print('Triming to max length done!')
+#TRIM
+for file in file_name:
+    num = trim(400, pre_processed + 'sep_' + file, pre_processed + file)
+    print('Trimed in ', file, ': ', num)
+print('Triming to max length done!')
 
 # cut first 1500 lines from train to make test file
 os.rename(pre_processed + 'train2023.lo', pre_processed + 'xtrain2023.lo')
