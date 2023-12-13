@@ -8,3 +8,4 @@ models/__pycache__
 **/__pycache__
 data/data_visualize.py
 data/tempCodeRunnerFile.py
+saved_model/
