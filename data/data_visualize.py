@@ -49,12 +49,12 @@ dev = [num_dup[0], num_trash[0], num_vie[0], num_trim[0],2000-num_dup[0]-num_tra
 train = [num_dup[1], num_trash[1], num_vie[1], num_trim[1],100000-1500-num_dup[1]-num_trash[1]-num_vie[1]-num_trim[1]]
 labels = ['Duplicate', 'Trash', 'Vietnamese', 'Length > 300','Remainings']
 plt.subplot(1,2,1)
-plt.pie(dev, labels=labels, autopct='%1.1f%%', startangle=90, counterclock=False)
+plt.pie(dev, autopct='%1.1f%%', startangle=90, counterclock=False, pctdistance= 1.1, explode=(0.1,0.1,0.1,0.1,0))
 plt.title('dev2023')
-plt.legend()
+plt.legend(labels, loc="best")
 
 plt.subplot(1,2,2)
-plt.pie(train, labels=labels, autopct='%1.1f%%', startangle=90, counterclock=False)
+plt.pie(train, autopct='%1.1f%%', startangle=90, counterclock=False, pctdistance= 1.1, explode=(0.1,0.1,0.1,0.1,0))
 plt.title('train2023')
-plt.legend()
+# plt.legend()
 plt.show()
