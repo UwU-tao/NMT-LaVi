@@ -1,40 +1,48 @@
-Dự án MultilingualMT-UET-KC4.0 là dự án open-source được phát triển bởi nhóm UETNLPLab.
+# Mô hình dịch máy Lào - Việt
+Ứng dụng dự án MultilingualMT-UET-KC4.0 vào bài toán dịch máy Lào-Việt trong chủ đề bài tập lớn lớp Xử lý ngôn ngữ tự nhiên INT3406E 20.
 
-# Setup
-## Cài đặt công cụ Multilingual-NMT
+## Nội dung
+
+- [Cài đặt môi trường, thư viện](#cài-đặt-môi-trường-thư-viện)
+- [Chuẩn bị dữ liệu](#bước-1-chuẩn-bị-dữ-liệu)
+- [Huấn luyện mô hình](#bước-2-huấn-luyện-mô-hình)
+- [Dịch](#bước-3-dịch)
+- [Đánh giá chất lượng dựa trên điểm BLEU](#bước-4-đánh-giá-chất-lượng-dựa-trên-điểm-bleu)
+- [Thành viên trong nhóm](#thành-viên-trong-nhóm)
+
+## Cài đặt môi trường, thư viện
 
 **Note**:
 Lưu ý:
 Phiên bản hiện tại chỉ tương thích với python>=3.6
-```bash
-git clone https://github.com/KCDichDaNgu/KC4.0_MultilingualNMT.git
-cd KC4.0_MultilingualNMT
+```
+git clone https://github.com/UwU-tao/NMT-LaVi.git
+cd NMT-LaVi
 pip install -r requirements.txt
-
-# Quickstart
-
 ```
 
 ## Bước 1: Chuẩn bị dữ liệu
 
-Ví dụ thực nghiệm dựa trên cặp dữ liệu Anh-Việt nguồn từ iwslt với 133k cặp câu:
+Ví dụ thực nghiệm dựa trên cặp dữ liệu Lào - Việt với 80k cặp câu.
 
 ```bash
-cd data/iwslt_en_vi
+cd data/pre_processed
 ```
 
 Dữ liệu bao gồm câu nguồn (`src`) và câu đích (`tgt`) dữ liệu đã được tách từ:
 
-* `train.en`
-* `train.vi`
-* `tst2012.en`
-* `tst2012.vi`
+* `train2023.lo`
+* `train2023.vi`
+* `dev2023.lo`
+* `dev2023.vi`
+* `test.lo`
+* `test.vi`
 
-| Data set    | Sentences  |                    Download                   |
-| :---------: | :--------: | :-------------------------------------------: |
-| Training    | 133,317    | via GitHub or located in data/train-en-vi.tgz |
-| Development | 1,553      | via GitHub or located in data/train-en-vi.tgz |
-| Test        | 1,268      | via GitHub or located in data/train-en-vi.tgz |
+| Data set    | Sentences  |  Download  |
+| :---------: | :--------: | :--------: |
+| Training    | 75,872     | via GitHub |
+| Development | 1,822      | via GitHub |
+| Test        | 1,000      | via GitHub |
 
 
 **Note**:
@@ -44,14 +52,6 @@ Lưu ý:
 
 Tách dữ liệu dev để tính toán hội tụ trong quá trình huấn luyện, thường không lớn hơn 5k câu.
 
-```text
-$ head -n 5 data/iwslt_en_vi/train.en
-Rachel Pike : The science behind a climate headline
-In 4 minutes , atmospheric chemist Rachel Pike provides a glimpse of the massive scientific effort behind the bold headlines on climate change , with her team -- one of thousands who contributed -- taking a risky flight over the rainforest in pursuit of data on a key molecule .
-I &apos;d like to talk to you today about the scale of the scientific effort that goes into making the headlines you see in the paper .
-Headlines that look like this when they have to do with climate change , and headlines that look like this when they have to do with air quality or smog .
-They are both two branches of the same field of atmospheric science .
-```
 
 ## Bước 2: Huấn luyện mô hình
 
@@ -61,9 +61,9 @@ Cần phải sửa lại file config en_vi.yml chỉnh siêu tham số và đư�
 ```yaml
 # data location and config section
 data:
-  train_data_location: data/iwslt_en_vi/train
-  eval_data_location:  data/iwslt_en_vi/tst2013
-  src_lang: .en 
+  train_data_location: data/pre_processed/train2023
+  eval_data_location:  data/pre_processed/dev2023
+  src_lang: .lo 
   trg_lang: .vi 
 log_file_models: 'model.log'
 lowercase: false
@@ -84,9 +84,9 @@ decode_strategy_kwargs:
   replace_unk: # tuple of layer/head attention to replace unknown words
     - 0 # layer
     - 0 # head
-input_max_length: 200 # input longer than this value will be trimmed in inference. Note that this values are to be used during cached PE, hence, validation set with more than this much tokens will call a warning for the trimming.
+input_max_length: 400 # input longer than this value will be trimmed in inference. Note that this values are to be used during cached PE, hence, validation set with more than this much tokens will call a warning for the trimming.
 max_length: 160 # only perform up to this much timestep during inference
-train_max_length: 50 # training samples with this much length in src/trg will be discarded
+train_max_length: 150 # training samples with this much length in src/trg will be discarded
 # optimizer and learning arguments section
 lr: 0.2
 optimizer: AdaBelief
@@ -121,10 +121,10 @@ python -m bin.main train --model Transformer --model_dir $MODEL/en-vi.model --co
 
 ## Bước 3: Dịch 
 
-Mô hình dịch dựa trên thuật toán beam search và lưu bản dịch tại `$your_data_path/translate.en2vi.vi`.
+Mô hình dịch dựa trên thuật toán beam search và lưu bản dịch tại `$your_data_path/translate.la2vi.vi`.
 
 ```bash
-python -m bin.main infer --model Transformer --model_dir $MODEL/en-vi.model --features_file $your_data_path/tst2012.en --predictions_file $your_data_path/translate.en2vi.vi
+python -m bin.main infer --model Transformer --model_dir $MODEL/la_vi.model --features_file $your_data_path/test.lo --predictions_file $your_data_path/translate.la2vi.vi
 ```
 
 ## Bước 4: Đánh giá chất lượng dựa trên điểm BLEU
@@ -132,13 +132,17 @@ python -m bin.main infer --model Transformer --model_dir $MODEL/en-vi.model --fe
 Đánh giá điểm BLEU dựa trên multi-bleu
 
 ```bash
-perl thrid-party/multi-bleu.perl $your_data_path/translate.en2vi.vi < $your_data_path/tst2012.vi
+perl thrid-party/multi-bleu.perl $your_data_path/translate.la2vi.vi < $your_data_path/test.vi
 ```
 
 |        MODEL       | BLEU (Beam Search) |
 | :-----------------:| :----------------: |
-| Transformer (Base) |        25.64       |
+| Transformer (Base) |        19.72       |
 
+## Thành viên trong nhóm
+Ngô Thượng Hiếu - 21021491\
+Ngô Vịt Huy - 21020046\
+Đồng Văn Dương - 21021470 
 
 ## Chi tiết tham khảo tại 
 [nmtuet.ddns.net](http://nmtuet.ddns.net:1190/)
