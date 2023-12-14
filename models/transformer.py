@@ -330,7 +330,11 @@ class Transformer(nn.Module):
 #                bleuscore = bleu_single(self, self.loader._eval_data)
 #                bleuscore = bleu_batch(self, self.loader._eval_data, batch_size=opt.get('eval_batch_size', const.DEFAULT_EVAL_BATCH_SIZE))
                 valid_src_lang, valid_trg_lang = self.loader.language_tuple
-                bleuscore = bleu_batch_iter(self, self.valid_iter, src_lang=valid_src_lang, trg_lang=valid_trg_lang)
+                try:
+                    bleuscore = bleu_batch_iter(self, self.valid_iter, src_lang=valid_src_lang, trg_lang=valid_trg_lang)
+                except Exception as e:
+                    print("Error in bleu calculation: ", e)
+                    print("Error at epoch: ", epoch)
 
 #                save_model_to_path(model, model_dir, checkpoint_idx=epoch+1)
                 saver.save_and_clear_model(model, model_dir, checkpoint_idx=epoch+1, maximum_saved_model=opt.get('maximum_saved_model_train', const.DEFAULT_NUM_KEEP_MODEL_TRAIN))

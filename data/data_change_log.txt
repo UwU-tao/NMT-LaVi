@@ -2,3 +2,5 @@
 - Nếu lặp trong file Lào/Việt -> xóa cả ở cả 2
 - Xóa emoji/html/link 
 - Nếu file tiếng lào có câu chứa tiếng Việt -> xóa ở cả 2
+- Với mỗi dấu câu (,./\()-_) tách chúng khỏi các từ còn lại (',' thành ' , ')
+- Xóa hết các câu độ dài lớn hơn config input_max_length (300 hoặc 400)
