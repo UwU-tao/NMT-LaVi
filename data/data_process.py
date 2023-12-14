@@ -182,15 +182,15 @@ for file in file_name:
     print('Trimed in ', file, ': ', num)
 print('Triming to max length done!')
 
-# cut first 1500 lines from train to make test file
-os.rename(pre_processed + 'train2023.lo', pre_processed + 'xtrain2023.lo')
-os.rename(pre_processed + 'train2023.vi', pre_processed + 'xtrain2023.vi')  
-cut_first_n_lines(1500, pre_processed + 'xtrain2023.lo', pre_processed + 'test.lo', pre_processed + 'train2023.lo')
-cut_first_n_lines(1500, pre_processed + 'xtrain2023.vi', pre_processed + 'test.vi', pre_processed + 'train2023.vi')
+# # cut first 1500 lines from train to make test file
+# os.rename(pre_processed + 'train2023.lo', pre_processed + 'xtrain2023.lo')
+# os.rename(pre_processed + 'train2023.vi', pre_processed + 'xtrain2023.vi')  
+# cut_first_n_lines(1500, pre_processed + 'xtrain2023.lo', pre_processed + 'test.lo', pre_processed + 'train2023.lo')
+# cut_first_n_lines(1500, pre_processed + 'xtrain2023.vi', pre_processed + 'test.vi', pre_processed + 'train2023.vi')
 
 #delete all files except train2023 and dev2023
-file_list.append('test.lo')
-file_list.append('test.vi')
+# file_list.append('test.lo')
+# file_list.append('test.vi')
 for file in os.listdir(pre_processed):
     if file not in file_list:
         os.remove(pre_processed + file)
