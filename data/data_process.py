@@ -172,7 +172,7 @@ for file in file_name:
     print('Removed vie in ', file, ': ', num)
 print('Remove Vi in La done!')
 
-# #SEP PUNC
+#SEP PUNC
 for file in file_list:
     sep_punc(pre_processed + 'no_vi_in_lo_' + file, pre_processed + 'sep_' + file)
 
